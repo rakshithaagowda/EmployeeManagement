@@ -1,10 +1,27 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash
+)
+
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "employee_secret_key"
 
 DATABASE = "employees.db"
+UPLOAD_FOLDER = "static/uploads"
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Allowed image extensions
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 
 # ----------------------------
@@ -27,6 +44,15 @@ def init_db():
         photo TEXT
     )
 """)
+def allowed_file(filename):
+    return (
+        "." in filename and
+        filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
+
+
+def create_upload_folder():
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 # ----------------------------
 # Home Page + Search
 # ----------------------------
@@ -100,13 +126,53 @@ def add_employee():
         salary = request.form["salary"]
         phone = request.form["phone"]
 
+        # Default photo
+        photo_filename = None
+
+        # Check if a photo was uploaded
+        photo = request.files.get("photo")
+
+        if photo and photo.filename != "":
+
+            if allowed_file(photo.filename):
+
+                filename = secure_filename(photo.filename)
+
+                # Make filename unique
+                photo_filename = f"{employee_id}_{filename}"
+
+                photo.save(
+                    os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        photo_filename
+                    )
+                )
+
+            else:
+
+                flash(
+                    "Only JPG, JPEG, PNG and GIF images are allowed.",
+                    "danger"
+                )
+
+                return redirect(request.url)
+
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
 
         cursor.execute("""
             INSERT INTO employees
-            (employee_id, full_name, email, department, designation, salary, phone)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (
+                employee_id,
+                full_name,
+                email,
+                department,
+                designation,
+                salary,
+                phone,
+                photo
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             employee_id,
             full_name,
@@ -114,7 +180,8 @@ def add_employee():
             department,
             designation,
             salary,
-            phone
+            phone,
+            photo_filename
         ))
 
         conn.commit()
@@ -218,4 +285,5 @@ def delete_employee(id):
 # ----------------------------
 if __name__ == "__main__":
     init_db()
+    create_upload_folder()
     app.run(debug=True)

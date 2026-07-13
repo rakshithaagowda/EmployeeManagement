@@ -132,29 +132,43 @@ Employee Management
 
             <table class="table table-hover align-middle">
 
-                <thead>
-
-                    <tr>
-
-                        <th>Employee ID</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Designation</th>
-                        <th>Salary</th>
-                        <th>Phone</th>
-                        <th class="text-center">Actions</th>
-
-                    </tr>
-
-                </thead>
+<thead class="table-primary">
+    <tr>
+        <th>Photo</th>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Designation</th>
+        <th>Salary</th>
+        <th>Phone</th>
+        <th>Actions</th>
+    </tr>
+</thead>  
 
                 <tbody>
 
                     {% for employee in employees %}
 
                     <tr>
-
+                    <td>
+    {% if employee.photo %}
+        <img
+            src="{{ url_for('static', filename='uploads/' + employee.photo) }}"
+            alt="Employee Photo"
+            width="60"
+            height="60"
+            class="rounded-circle border"
+            style="object-fit: cover;">
+    {% else %}
+        <img
+            src="https://via.placeholder.com/60?text=👤"
+            alt="No Photo"
+            width="60"
+            height="60"
+            class="rounded-circle border">
+    {% endif %}
+</td>
                         <td>
                             <strong>{{ employee.employee_id }}</strong>
                         </td>
