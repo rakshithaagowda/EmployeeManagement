@@ -15,22 +15,18 @@ def init_db():
     cursor = conn.cursor()
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS employees (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            employee_id TEXT UNIQUE NOT NULL,
-            full_name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            department TEXT NOT NULL,
-            designation TEXT NOT NULL,
-            salary REAL NOT NULL,
-            phone TEXT NOT NULL
-        )
-    """)
-
-    conn.commit()
-    conn.close()
-
-
+    CREATE TABLE IF NOT EXISTS employees (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        employee_id TEXT UNIQUE NOT NULL,
+        full_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        department TEXT NOT NULL,
+        designation TEXT NOT NULL,
+        salary REAL NOT NULL,
+        phone TEXT NOT NULL,
+        photo TEXT
+    )
+""")
 # ----------------------------
 # Home Page + Search
 # ----------------------------
