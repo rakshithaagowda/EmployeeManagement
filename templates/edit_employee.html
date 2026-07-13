@@ -6,22 +6,97 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-lg-8">
+    <div class="col-lg-9">
 
         <div class="card shadow">
 
             <div class="card-header bg-warning">
 
-                <h3>
+                <h2>
                     <i class="bi bi-pencil-square"></i>
                     Edit Employee
-                </h3>
+                </h2>
 
             </div>
 
             <div class="card-body">
 
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
+
+                    <!-- Employee Photo -->
+
+                    <div class="text-center mb-4">
+
+                        {% if employee.photo %}
+
+                        <img
+                            src="{{ url_for('static', filename='uploads/' + employee.photo) }}"
+                            class="rounded-circle border shadow"
+                            width="150"
+                            height="150"
+                            style="object-fit: cover;">
+
+                        {% else %}
+
+                        <img
+                            src="https://via.placeholder.com/150?text=👤"
+                            class="rounded-circle border shadow"
+                            width="150"
+                            height="150">
+
+                        {% endif %}
+
+                        <h5 class="mt-3">
+
+                            Current Employee Photo
+
+                        </h5>
+
+                    </div>
+
+                    <!-- Upload New Photo -->
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Upload New Photo
+
+                        </label>
+
+                        <input
+                            type="file"
+                            class="form-control"
+                            name="photo"
+                            accept=".jpg,.jpeg,.png,.gif">
+
+                        <div class="form-text">
+
+                            Leave empty to keep the current photo.
+
+                        </div>
+
+                    </div>
+
+                    <!-- Delete Photo -->
+
+                    <div class="form-check mb-4">
+
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="delete_photo"
+                            id="delete_photo">
+
+                        <label
+                            class="form-check-label"
+                            for="delete_photo">
+
+                            Remove Current Photo
+
+                        </label>
+
+                    </div>
 
                     <div class="row">
 
@@ -31,8 +106,8 @@
 
                             <input
                                 type="text"
-                                name="employee_id"
                                 class="form-control"
+                                name="employee_id"
                                 value="{{ employee.employee_id }}"
                                 required>
 
@@ -44,8 +119,8 @@
 
                             <input
                                 type="text"
-                                name="full_name"
                                 class="form-control"
+                                name="full_name"
                                 value="{{ employee.full_name }}"
                                 required>
 
@@ -59,8 +134,8 @@
 
                         <input
                             type="email"
-                            name="email"
                             class="form-control"
+                            name="email"
                             value="{{ employee.email }}"
                             required>
 
@@ -73,38 +148,27 @@
                             <label>Department</label>
 
                             <select
-                                name="department"
-                                class="form-select">
+                                class="form-select"
+                                name="department">
 
-                                <option value="Information Technology"
-                                {% if employee.department=="Information Technology" %}selected{% endif %}>
-                                Information Technology
+                                {% for dept in [
+                                    "Information Technology",
+                                    "Human Resources",
+                                    "Finance",
+                                    "Marketing",
+                                    "Sales",
+                                    "Operations"
+                                ] %}
+
+                                <option
+                                    value="{{ dept }}"
+                                    {% if employee.department == dept %}selected{% endif %}>
+
+                                    {{ dept }}
+
                                 </option>
 
-                                <option value="Human Resources"
-                                {% if employee.department=="Human Resources" %}selected{% endif %}>
-                                Human Resources
-                                </option>
-
-                                <option value="Finance"
-                                {% if employee.department=="Finance" %}selected{% endif %}>
-                                Finance
-                                </option>
-
-                                <option value="Marketing"
-                                {% if employee.department=="Marketing" %}selected{% endif %}>
-                                Marketing
-                                </option>
-
-                                <option value="Sales"
-                                {% if employee.department=="Sales" %}selected{% endif %}>
-                                Sales
-                                </option>
-
-                                <option value="Operations"
-                                {% if employee.department=="Operations" %}selected{% endif %}>
-                                Operations
-                                </option>
+                                {% endfor %}
 
                             </select>
 
@@ -116,8 +180,8 @@
 
                             <input
                                 type="text"
-                                name="designation"
                                 class="form-control"
+                                name="designation"
                                 value="{{ employee.designation }}"
                                 required>
 
@@ -133,8 +197,8 @@
 
                             <input
                                 type="number"
-                                name="salary"
                                 class="form-control"
+                                name="salary"
                                 value="{{ employee.salary }}"
                                 required>
 
@@ -146,8 +210,8 @@
 
                             <input
                                 type="text"
-                                name="phone"
                                 class="form-control"
+                                name="phone"
                                 value="{{ employee.phone }}"
                                 required>
 
@@ -155,13 +219,22 @@
 
                     </div>
 
-                    <button class="btn btn-warning">
-                        <i class="bi bi-check-circle"></i>
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
                         Update Employee
+
                     </button>
 
-                    <a href="/" class="btn btn-secondary">
+                    <a
+                        href="/"
+                        class="btn btn-secondary">
+
                         Cancel
+
                     </a>
 
                 </form>

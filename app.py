@@ -204,6 +204,10 @@ def edit_employee(id):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    # Get employee details
+    cursor.execute("SELECT * FROM employees WHERE id=?", (id,))
+    employee = cursor.fetchone()
+
     if request.method == "POST":
 
         employee_id = request.form["employee_id"]
@@ -214,6 +218,63 @@ def edit_employee(id):
         salary = request.form["salary"]
         phone = request.form["phone"]
 
+        # Keep existing photo by default
+        photo_filename = employee["photo"]
+
+        # Remove current photo
+        if request.form.get("delete_photo"):
+
+            if photo_filename:
+                photo_path = os.path.join(
+                    app.config["UPLOAD_FOLDER"],
+                    photo_filename
+                )
+
+                if os.path.exists(photo_path):
+                    os.remove(photo_path)
+
+            photo_filename = None
+
+        # Upload new photo
+        photo = request.files.get("photo")
+
+        if photo and photo.filename != "":
+
+            if allowed_file(photo.filename):
+
+                # Delete old photo
+                if employee["photo"]:
+
+                    old_photo = os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        employee["photo"]
+                    )
+
+                    if os.path.exists(old_photo):
+                        os.remove(old_photo)
+
+                filename = secure_filename(photo.filename)
+
+                photo_filename = f"{employee_id}_{filename}"
+
+                photo.save(
+                    os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        photo_filename
+                    )
+                )
+
+            else:
+
+                flash(
+                    "Only JPG, JPEG, PNG and GIF images are allowed.",
+                    "danger"
+                )
+
+                conn.close()
+
+                return redirect(request.url)
+
         cursor.execute("""
             UPDATE employees
             SET
@@ -223,7 +284,8 @@ def edit_employee(id):
                 department=?,
                 designation=?,
                 salary=?,
-                phone=?
+                phone=?,
+                photo=?
             WHERE id=?
         """, (
             employee_id,
@@ -233,6 +295,7 @@ def edit_employee(id):
             designation,
             salary,
             phone,
+            photo_filename,
             id
         ))
 
@@ -242,13 +305,6 @@ def edit_employee(id):
         flash("Employee Updated Successfully!", "success")
 
         return redirect(url_for("home"))
-
-    cursor.execute(
-        "SELECT * FROM employees WHERE id=?",
-        (id,)
-    )
-
-    employee = cursor.fetchone()
 
     conn.close()
 
