@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Employee{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-warning">
+
+                <h3>
+                    <i class="bi bi-pencil-square"></i>
+                    Edit Employee
+                </h3>
+
+            </div>
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Employee ID</label>
+
+                            <input
+                                type="text"
+                                name="employee_id"
+                                class="form-control"
+                                value="{{ employee.employee_id }}"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Full Name</label>
+
+                            <input
+                                type="text"
+                                name="full_name"
+                                class="form-control"
+                                value="{{ employee.full_name }}"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Email</label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ employee.email }}"
+                            required>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Department</label>
+
+                            <select
+                                name="department"
+                                class="form-select">
+
+                                <option value="Information Technology"
+                                {% if employee.department=="Information Technology" %}selected{% endif %}>
+                                Information Technology
+                                </option>
+
+                                <option value="Human Resources"
+                                {% if employee.department=="Human Resources" %}selected{% endif %}>
+                                Human Resources
+                                </option>
+
+                                <option value="Finance"
+                                {% if employee.department=="Finance" %}selected{% endif %}>
+                                Finance
+                                </option>
+
+                                <option value="Marketing"
+                                {% if employee.department=="Marketing" %}selected{% endif %}>
+                                Marketing
+                                </option>
+
+                                <option value="Sales"
+                                {% if employee.department=="Sales" %}selected{% endif %}>
+                                Sales
+                                </option>
+
+                                <option value="Operations"
+                                {% if employee.department=="Operations" %}selected{% endif %}>
+                                Operations
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Designation</label>
+
+                            <input
+                                type="text"
+                                name="designation"
+                                class="form-control"
+                                value="{{ employee.designation }}"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Salary</label>
+
+                            <input
+                                type="number"
+                                name="salary"
+                                class="form-control"
+                                value="{{ employee.salary }}"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label>Phone</label>
+
+                            <input
+                                type="text"
+                                name="phone"
+                                class="form-control"
+                                value="{{ employee.phone }}"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-warning">
+                        <i class="bi bi-check-circle"></i>
+                        Update Employee
+                    </button>
+
+                    <a href="/" class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
