@@ -23,7 +23,27 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # Allowed image extensions
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+# ----------------------------
+# Login Required
+# ----------------------------
+def login_required():
 
+    if "admin" not in session:
+        return False
+
+    return True
+
+# ----------------------------
+# Logout
+# ----------------------------
+@app.route("/logout")
+def logout():
+
+    session.pop("admin", None)
+
+    flash("Logged out successfully!", "success")
+
+    return redirect(url_for("login"))
 # ----------------------------
 # Initialize Database
 # ----------------------------
@@ -120,7 +140,8 @@ def login():
 # ----------------------------
 @app.route("/")
 def home():
-
+    if not login_required():
+        return redirect(url_for("login"))
     search = request.args.get("search", "")
 
     conn = sqlite3.connect(DATABASE)
@@ -177,7 +198,8 @@ def home():
 # ----------------------------
 @app.route("/add", methods=["GET", "POST"])
 def add_employee():
-
+    if not login_required():
+        return redirect(url_for("login"))
     if request.method == "POST":
 
         employee_id = request.form["employee_id"]
@@ -261,7 +283,8 @@ def add_employee():
 # ----------------------------
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_employee(id):
-
+    if not login_required():
+        return redirect(url_for("login"))
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -381,6 +404,8 @@ def edit_employee(id):
 # ----------------------------
 @app.route("/delete/<int:id>")
 def delete_employee(id):
+    if not login_required():
+        return redirect(url_for("login"))
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
