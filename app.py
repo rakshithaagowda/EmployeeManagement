@@ -7,7 +7,8 @@ from flask import (
     request,
     redirect,
     url_for,
-    flash
+    flash,
+    session
 )
 
 from werkzeug.utils import secure_filename
@@ -23,27 +24,51 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Allowed image extensions
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
-
 # ----------------------------
 # Initialize Database
 # ----------------------------
 def init_db():
+
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
+    # Employee Table
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS employees (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        employee_id TEXT UNIQUE NOT NULL,
-        full_name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        department TEXT NOT NULL,
-        designation TEXT NOT NULL,
-        salary REAL NOT NULL,
-        phone TEXT NOT NULL,
-        photo TEXT
-    )
-""")
+        CREATE TABLE IF NOT EXISTS employees (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_id TEXT UNIQUE NOT NULL,
+            full_name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            department TEXT NOT NULL,
+            designation TEXT NOT NULL,
+            salary REAL NOT NULL,
+            phone TEXT NOT NULL,
+            photo TEXT
+        )
+    """)
+
+    # Admin Table
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS admin (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+)
+    """)
+    
+    # Insert Default Admin
+    cursor.execute("""
+    INSERT OR IGNORE INTO admin (id, username, password)
+    VALUES (1, 'admin', 'admin123')
+    """)
+    
+    conn.commit()
+    conn.close()
+
+    # ----------------------------
+# Helper Functions
+# ----------------------------
 def allowed_file(filename):
     return (
         "." in filename and
