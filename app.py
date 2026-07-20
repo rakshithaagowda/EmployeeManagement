@@ -78,6 +78,43 @@ def allowed_file(filename):
 
 def create_upload_folder():
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+    # ----------------------------
+# Admin Login
+# ----------------------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM admin WHERE username=? AND password=?",
+            (username, password)
+        )
+
+        admin = cursor.fetchone()
+
+        conn.close()
+
+        if admin:
+
+            session["admin"] = username
+
+            flash("Login Successful!", "success")
+
+            return redirect(url_for("home"))
+
+        else:
+
+            flash("Invalid Username or Password!", "danger")
+
+    return render_template("login.html")
 # ----------------------------
 # Home Page + Search
 # ----------------------------
