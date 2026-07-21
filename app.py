@@ -45,6 +45,63 @@ def logout():
     flash("Logged out successfully!", "success")
 
     return redirect(url_for("login"))
+
+# ----------------------------
+# Change Password
+# ----------------------------
+@app.route("/change-password", methods=["GET", "POST"])
+def change_password():
+
+    if "admin" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+
+        current_password = request.form["current_password"]
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
+
+        conn = sqlite3.connect(DATABASE)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM admin WHERE username=?",
+            (session["admin"],)
+        )
+
+        admin = cursor.fetchone()
+
+        # Check current password
+        if not check_password_hash(admin["password"], current_password):
+
+            flash("Current password is incorrect!", "danger")
+            conn.close()
+            return redirect(url_for("change_password"))
+
+        # Check new passwords match
+        if new_password != confirm_password:
+
+            flash("New passwords do not match!", "warning")
+            conn.close()
+            return redirect(url_for("change_password"))
+
+        # Hash the new password
+        hashed_password = generate_password_hash(new_password)
+
+        cursor.execute(
+            "UPDATE admin SET password=? WHERE username=?",
+            (hashed_password, session["admin"])
+        )
+
+        conn.commit()
+        conn.close()
+
+        flash("Password changed successfully!", "success")
+
+        return redirect(url_for("home"))
+
+    return render_template("change_password.html")
 # ----------------------------
 # Initialize Database
 # ----------------------------
