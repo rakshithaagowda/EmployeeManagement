@@ -12,6 +12,7 @@ from flask import (
 )
 
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "employee_secret_key"
@@ -78,10 +79,16 @@ def init_db():
     """)
     
     # Insert Default Admin
+    hashed_password = generate_password_hash("admin123")
+
     cursor.execute("""
     INSERT OR IGNORE INTO admin (id, username, password)
-    VALUES (1, 'admin', 'admin123')
-    """)
+    VALUES (?, ?, ?)
+    """, (
+    1,
+    "admin",
+    hashed_password
+))
     
     conn.commit()
     conn.close()
@@ -111,28 +118,27 @@ def login():
         password = request.form["password"]
 
         conn = sqlite3.connect(DATABASE)
+        conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM admin WHERE username=? AND password=?",
-            (username, password)
+            "SELECT * FROM admin WHERE username=?",
+            (username,)
         )
 
         admin = cursor.fetchone()
 
         conn.close()
 
-        if admin:
+        if admin and check_password_hash(admin["password"], password):
 
-            session["admin"] = username
+            session["admin"] = admin["username"]
 
             flash("Login Successful!", "success")
 
             return redirect(url_for("home"))
 
-        else:
-
-            flash("Invalid Username or Password!", "danger")
+        flash("Invalid Username or Password!", "danger")
 
     return render_template("login.html")
 # ----------------------------
