@@ -572,6 +572,52 @@ def export_excel():
         download_name="employees.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 )
+
+# ----------------------------
+# Reports
+# ----------------------------
+@app.route("/reports")
+def reports():
+
+    if "admin" not in session:
+        return redirect(url_for("login"))
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    # Summary Statistics
+    cursor.execute("SELECT COUNT(*) FROM employees")
+    total_employees = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT department) FROM employees")
+    total_departments = cursor.fetchone()[0]
+
+    cursor.execute("SELECT AVG(salary) FROM employees")
+    average_salary = cursor.fetchone()[0] or 0
+
+    cursor.execute("SELECT SUM(salary) FROM employees")
+    total_salary = cursor.fetchone()[0] or 0
+
+    # Department Report
+    cursor.execute("""
+        SELECT department,
+               COUNT(*) AS total
+        FROM employees
+        GROUP BY department
+    """)
+    department_data = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "reports.html",
+        total_employees=total_employees,
+        total_departments=total_departments,
+        average_salary=average_salary,
+        total_salary=total_salary,
+        department_data=department_data
+    )
 # ----------------------------
 # Run Application
 # ----------------------------
