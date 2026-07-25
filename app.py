@@ -599,13 +599,16 @@ def reports():
     cursor.execute("SELECT SUM(salary) FROM employees")
     total_salary = cursor.fetchone()[0] or 0
 
-    # Department Report
+    # Department Summary
     cursor.execute("""
-        SELECT department,
-               COUNT(*) AS total
-        FROM employees
-        GROUP BY department
-    """)
+    SELECT
+        department,
+        COUNT(*) AS total,
+        AVG(salary) AS average_salary
+    FROM employees
+    GROUP BY department
+""")
+
     department_data = cursor.fetchall()
 
     conn.close()
