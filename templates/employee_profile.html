@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+Employee Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+
+        <h3 class="mb-0">
+            <i class="bi bi-person-badge"></i>
+            Employee Profile
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4 text-center">
+
+                {% if employee.photo %}
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + employee.photo) }}"
+                        class="rounded-circle border"
+                        width="180"
+                        height="180"
+                        style="object-fit:cover;">
+                {% else %}
+                    <img
+                        src="https://via.placeholder.com/180?text=👤"
+                        class="rounded-circle border">
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-8">
+
+                <table class="table">
+
+                    <tr>
+                        <th>Employee ID</th>
+                        <td>{{ employee.employee_id }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ employee.full_name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ employee.email }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Department</th>
+                        <td>{{ employee.department }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Designation</th>
+                        <td>{{ employee.designation }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Salary</th>
+                        <td>₹ {{ employee.salary }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Phone</th>
+                        <td>{{ employee.phone }}</td>
+                    </tr>
+
+                </table>
+
+                <a
+                    href="/edit/{{ employee.id }}"
+                    class="btn btn-warning">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Edit Employee
+
+                </a>
+
+                <a
+                    href="/"
+                    class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Back
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

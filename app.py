@@ -621,6 +621,34 @@ def reports():
         total_salary=total_salary,
         department_data=department_data
     )
+
+@app.route("/employee/<int:id>")
+def employee_profile(id):
+
+    if "admin" not in session:
+        return redirect(url_for("login"))
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM employees WHERE id = ?",
+        (id,)
+    )
+
+    employee = cursor.fetchone()
+
+    conn.close()
+
+    if employee is None:
+        flash("Employee not found.", "danger")
+        return redirect(url_for("home"))
+
+    return render_template(
+        "employee_profile.html",
+        employee=employee
+    )
 # ----------------------------
 # Run Application
 # ----------------------------
