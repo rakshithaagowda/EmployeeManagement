@@ -56,9 +56,9 @@
             Reports
         </a>
 
-        <a href="#">
-            <i class="bi bi-download"></i>
-            Export CSV
+        <a href="{{ url_for('export_excel') }}">
+            <i class="bi bi-file-earmark-excel"></i>
+             Export Excel
         </a>
 
        <a href="{{ url_for('change_password') }}">

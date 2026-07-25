@@ -8,11 +8,13 @@ from flask import (
     redirect,
     url_for,
     flash,
-    session
+    session,
+    send_file
 )
 
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
+from openpyxl import Workbook
 
 app = Flask(__name__)
 app.secret_key = "employee_secret_key"
@@ -505,7 +507,71 @@ def delete_employee(id):
 
     return redirect(url_for("home"))
 
+# ----------------------------
+# Export Employees to Excel
+# ----------------------------
+@app.route("/export/excel")
+def export_excel():
 
+    if "admin" not in session:
+        return redirect(url_for("login"))
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            employee_id,
+            full_name,
+            email,
+            department,
+            designation,
+            salary,
+            phone
+        FROM employees
+        ORDER BY employee_id
+    """)
+
+    employees = cursor.fetchall()
+    conn.close()
+
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Employees"
+
+    # Header Row
+    sheet.append([
+        "Employee ID",
+        "Full Name",
+        "Email",
+        "Department",
+        "Designation",
+        "Salary",
+        "Phone"
+    ])
+
+    # Employee Data
+    for employee in employees:
+        sheet.append([
+            employee["employee_id"],
+            employee["full_name"],
+            employee["email"],
+            employee["department"],
+            employee["designation"],
+            employee["salary"],
+            employee["phone"]
+        ])
+
+    filename = os.path.join(os.getcwd(), "employees.xlsx")
+    workbook.save(filename)
+
+    return send_file(
+        filename,
+        as_attachment=True,
+        download_name="employees.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+)
 # ----------------------------
 # Run Application
 # ----------------------------
