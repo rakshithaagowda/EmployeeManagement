@@ -261,5 +261,181 @@ Employee Management
     </div>
 
 </div>
+<!-- Analytics -->
 
+<div class="row mt-4">
+
+    <!-- Department Pie Chart -->
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header bg-primary text-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-pie-chart-fill"></i>
+                    Employees by Department
+                </h5>
+
+            </div>
+
+            <div class="card-body d-flex justify-content-center align-items-center">
+
+                <div style="width:300px; height:300px;">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Salary Bar Chart -->
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header bg-success text-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    Salary Distribution
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div style="height:300px;">
+                    <canvas id="salaryChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    <!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = [
+{% for item in department_data %}
+"{{ item['department'] }}",
+{% endfor %}
+];
+
+const values = [
+{% for item in department_data %}
+{{ item['total'] }},
+{% endfor %}
+];
+
+const ctx = document.getElementById('departmentChart');
+
+new Chart(ctx, {
+
+    type: 'pie',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: 'Employees',
+
+            data: values
+
+        }]
+
+    },
+
+    options: {
+
+    responsive: true,
+    maintainAspectRatio: true,
+
+    plugins: {
+
+        legend: {
+            position: 'bottom'
+        }
+
+    }
+
+}
+
+});
+
+</script>
+<script>
+
+const salaryLabels = [
+{% for item in salary_data %}
+"{{ item['full_name'] }}",
+{% endfor %}
+];
+
+const salaryValues = [
+{% for item in salary_data %}
+{{ item['salary'] }},
+{% endfor %}
+];
+
+const salaryCtx = document.getElementById("salaryChart");
+
+new Chart(salaryCtx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: salaryLabels,
+
+        datasets: [{
+
+            label: "Salary",
+
+            data: salaryValues
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
 {% endblock %}

@@ -244,16 +244,36 @@ def home():
 
     employees = cursor.fetchall()
 
+    # Employees by Department
+    cursor.execute("""
+    SELECT department, COUNT(*) as total
+    FROM employees
+    GROUP BY department
+    """)
+
+    department_data = cursor.fetchall()
+
+    # Salary by Employee
+    cursor.execute("""
+    SELECT full_name, salary
+    FROM employees
+    ORDER BY salary DESC
+    """)
+
+    salary_data = cursor.fetchall()
+
     conn.close()
 
     return render_template(
-        "index.html",
-        employees=employees,
-        search=search,
-        total_employees=total_employees,
-        total_departments=total_departments,
-        average_salary=average_salary
-    )
+    "index.html",
+    employees=employees,
+    search=search,
+    total_employees=total_employees,
+    total_departments=total_departments,
+    average_salary=average_salary,
+    department_data=department_data,
+    salary_data=salary_data
+)
 
 
 # ----------------------------
