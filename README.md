@@ -2,73 +2,85 @@
 
 A modern **Employee Management System** built with **Flask** and **SQLite** that enables administrators to efficiently manage employee records through a secure and intuitive web interface.
 
+---
+
 ## 🚀 Features
 
-### Employee Management
-- Add new employees
-- Edit employee details
-- Delete employees
-- View all employee records
-- Employee photo upload
-- Search employees by:
-  - Employee ID
-  - Name
-  - Department
-  - Designation
+### 👥 Employee Management
 
-### Authentication & Security
-- Admin login
-- Password hashing
-- Protected routes
-- Secure password change
-- Session-based authentication
-- Logout functionality
+* Add new employees
+* Edit employee details
+* Delete employees
+* View employee profile
+* Upload employee photos
+* Search employees by:
 
-### Dashboard
-- Total employees
-- Total departments
-- Average salary
-- Dashboard analytics
-- Department pie chart
+  * Employee ID
+  * Name
+  * Department
+  * Designation
 
-### Reports
-- Employee summary
-- Department summary
-- Average salary analysis
-- Total salary statistics
-- Department analytics
+### 🔐 Authentication & Security
 
-### Export
-- Export employee data to Excel (.xlsx)
+* Admin login
+* Password hashing
+* Session-based authentication
+* Protected routes
+* Change password
+* Logout functionality
+
+### 📊 Dashboard
+
+* Total employees
+* Total departments
+* Average salary
+* Dashboard statistics
+* Department analytics charts
+
+### 📈 Reports
+
+* Employee summary
+* Department summary
+* Average salary analysis
+* Total salary statistics
+* Department analytics with charts
+
+### 📥 Export
+
+* Export employee data to Excel (.xlsx)
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Backend
-- Flask
-- Python
+
+* Python
+* Flask
 
 ### Frontend
-- HTML5
-- CSS3
-- Bootstrap 5
-- Jinja2
-- JavaScript
-- Chart.js
+
+* HTML5
+* CSS3
+* Bootstrap 5
+* JavaScript
+* Jinja2
+* Chart.js
 
 ### Database
-- SQLite
+
+* SQLite
 
 ### Libraries
-- OpenPyXL
-- Werkzeug
+
+* OpenPyXL
+* Werkzeug
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 EmployeeManagement/
 │
 ├── static/
@@ -80,12 +92,12 @@ EmployeeManagement/
 │   ├── index.html
 │   ├── add_employee.html
 │   ├── edit_employee.html
+│   ├── employee_profile.html
 │   ├── login.html
 │   ├── change_password.html
 │   └── reports.html
 │
 ├── app.py
-├── employees.db
 ├── requirements.txt
 └── README.md
 ```
@@ -94,78 +106,53 @@ EmployeeManagement/
 
 ## ⚙️ Installation
 
-### Clone the repository
-
-```bash
-git clone https://github.com/rakshithaagowda/EmployeeManagement.git
-```
-
-### Navigate to the project
-
-```bash
-cd EmployeeManagement
-```
-
-### Create a virtual environment
-
-```bash
-python -m venv venv
-```
-
-### Activate the virtual environment
-
-Windows
-
-```bash
-venv\Scripts\activate
-```
-
-Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-### Install dependencies
+1. Clone the repository.
+2. Create and activate a virtual environment.
+3. Install the required packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Run the application
+4. Start the application:
 
 ```bash
 python app.py
 ```
 
-Visit:
+5. Open your browser and visit:
 
-```
+```text
 http://127.0.0.1:5000
 ```
+
 ---
 
-## 📈 Future Enhancements
+## ✨ Key Features
 
-- PDF Export
-- Email Notifications
-- Role-based Access Control
-- Employee Attendance Module
-- Payroll Management
-- REST API
-- Cloud Database Support
+* Secure admin authentication
+* Employee profile page
+* Employee photo management
+* Dashboard analytics
+* Reports dashboard
+* Excel export
+* Responsive Bootstrap UI
+
+---
+
+## 🚀 Future Enhancements
+
+* PDF export
+* Attendance management
+* Leave management
+* Department management
+* Email notifications
+* REST API support
 
 ---
 
 ## 👩‍💻 Author
 
-Rakshitha R S
+**Rakshitha R S**
 
-GitHub:
-https://github.com/rakshithaagowda
-
----
-
-## ⭐ Support
-
-If you like this project, consider giving it a ⭐ on GitHub.
+GitHub: https://github.com/rakshithaagowda
